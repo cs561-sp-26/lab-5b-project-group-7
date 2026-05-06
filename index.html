@@ -57,7 +57,7 @@
                 alt="SpeedScore logo"
             />
             <h1 id="appName" class="navbar-title">SpeedScore</h1>
-            <div class="navbar-right-items">        
+            <div class="navbar-right-items">
                 <button
                     id="profileBtn"
                     type="button"
@@ -1556,6 +1556,41 @@
                         </button>
                     </div>
                 </form>
+            </div>
+            <div class="modal" tabindex="-1" id="confirmDeleteRoundModal">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Delete Round?</h5>
+                            <button
+                                    type="button"
+                                    class="btn-close"
+                                    data-bs-dismiss="modal"
+                                    aria-label="Close"
+                            ></button>
+                        </div>
+                        <div class="modal-body">
+                            <p>Do you really want to delete that round?</p>
+                        </div>
+                        <div class="modal-footer">
+                            <button
+                                    type="button"
+                                    class="btn btn-secondary"
+                                    data-bs-dismiss="modal"
+                            >
+                                No, Cancel
+                            </button>
+                            <button
+                                    type="button"
+                                    id="confirmDeleteBtn"
+                                    class="btn btn-primary"
+                                    onClick=""
+                            >
+                                Yes, Delete Round
+                            </button>
+                        </div>
+                    </div>
+                </div>
             </div>
         </main>
         <script
