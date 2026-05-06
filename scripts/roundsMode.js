@@ -228,6 +228,8 @@ function deleteRound(roundId) {
     GlobalUserData.rounds = GlobalUserData.rounds.filter(function (round) {
         return round.roundNum !== roundId;
     });
+
+    return GlobalUserData.rounds.length < originalLength;
 }
 
 /*************************************************************************
