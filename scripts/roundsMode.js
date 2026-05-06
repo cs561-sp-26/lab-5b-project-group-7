@@ -244,7 +244,7 @@ function confirmDelete(roundId) {
         document.getElementById("confirmDeleteRoundModal")
     );
     let confirmBtn = document.getElementById("confirmDeleteBtn");
-    confirmBtn.addEventListener("click", function (event) {
+    confirmBtn.onclick = function(event){
         event.preventDefault();
         console.log("deleting round with id " + roundId);
         for (var i = 0; i < GlobalRoundsTable.rows.length; i++) {
@@ -265,7 +265,7 @@ function confirmDelete(roundId) {
             (GlobalRoundsTable.rows.length - 1) +
             " speedgolf rounds";
         modal.hide();
-    });
+    };
     modal.show();
 }
 /*************************************************************************
