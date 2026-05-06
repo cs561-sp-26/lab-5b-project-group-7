@@ -251,7 +251,7 @@ function confirmDelete(roundId) {
             (GlobalRoundsTable.rows.length - 1) +
             " speedgolf rounds";
         modal.hide();
-    });
+    };
     modal.show();
 }
 /*************************************************************************
