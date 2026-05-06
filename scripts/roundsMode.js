@@ -1,29 +1,29 @@
 /*************************************************************************
  * File: roundsMode.js
- * This file contains functions that support the "Rounds" mode, 
+ * This file contains functions that support the "Rounds" mode,
  * including the "Log Round" modal.
 *************************************************************************/
 
 /*************************************************************************
- * @function updateSGS 
- * @Desc 
- * When the strokes, minutes or seconds fields are updated, 
+ * @function updateSGS
+ * @Desc
+ * When the strokes, minutes or seconds fields are updated,
  * update the speedgolf score accordingly.
  * @global roundStrokes: Form's strokes field
  * @global roundMinutes: Form's minutes field
  * @global roundSeconds: Form's seconds field
  *************************************************************************/
  function updateSGS() {
-  GlobalRoundSGS.value = 
-    (GlobalRoundStrokes.valueAsNumber + GlobalRoundMinutes.valueAsNumber) + 
+  GlobalRoundSGS.value =
+    (GlobalRoundStrokes.valueAsNumber + GlobalRoundMinutes.valueAsNumber) +
     ":" + GlobalRoundSeconds.value
 }
 
 /*************************************************************************
-* @function changeSeconds 
-* @Desc 
+* @function changeSeconds
+* @Desc
 * When the seconds field is updated, we need to ensure that the
-* seconds field of the round time is zero-padded. We also need to 
+* seconds field of the round time is zero-padded. We also need to
 * call updateSGS to update the speedgolf score based on the new seconds value.
 * @global roundStrokes: Form's strokes field
 * @global roundMinutes: Form's minutes field
@@ -37,8 +37,8 @@ function changeSeconds() {
 }
 
 /*************************************************************************
-* @function prepLogRoundForm 
-* @desc 
+* @function prepLogRoundForm
+* @desc
 * Prepares the round form to log a new round by setting the header text
 * and button label to "Log Round," and by setting the button's icon
 * @global GlobalRoundFormHeader: Form's H1 element
@@ -57,8 +57,8 @@ function prepLogRoundForm() {
 }
 
 /*************************************************************************
-* @function prepEditRoundForm 
-* @desc 
+* @function prepEditRoundForm
+* @desc
 * Prepares the round form to edit an existing round by setting the app's
 * title, and the form button's label and icon.
 * and button label to "Log Round," and by setting the button's icon
@@ -78,10 +78,10 @@ function prepEditRoundForm() {
 }
 
 /*************************************************************************
-* @function fillRoundForm 
-* @desc 
+* @function fillRoundForm
+* @desc
 * Prepares the round form for editing by filling it with the data on the
-* round to be edited. 
+* round to be edited.
 * @param round: An object containing the round data
 * @global GlobalRoundDate: Form's date field
 * @global GlobalRoundCourse: Form's course field
@@ -105,8 +105,8 @@ GlobalRoundNotes.value = round.notes;
 }
 
 /*************************************************************************
-* @function resetLogRoundForm 
-* @Desc 
+* @function resetLogRoundForm
+* @Desc
 * When the user exits the "Log Round" Dialog, reset the form to
 * show blank data and default values
 * @global GlobalRoundDate: Form's date field
@@ -147,8 +147,8 @@ GlobalFirstFocusableLogRoundItem.set(GlobalRoundDate);
 }
 
 /*************************************************************************
-* @function roundUpdatedClose CLICK Handler 
-* @desc 
+* @function roundUpdatedClose CLICK Handler
+* @desc
 * When the user clicks on the close button of the "Round Logged"
 * toast notification on the "Rounds" mode page, close it.
 * @global roundLogged: The "Round Logged" toast
@@ -159,7 +159,7 @@ GlobalRoundUpdated.classList.add("hidden");
 
 /*************************************************************************
 * @function writeRoundToTable
-* @desc 
+* @desc
 * Given an HTML row elemnt and the index of the round to write, write
 * the round to the row element by replacing its innerHTML.
 * @param row -- a reference to an HTML table row
@@ -169,22 +169,22 @@ GlobalRoundUpdated.classList.add("hidden");
 *************************************************************************/
 function writeRoundToTable(row, rIndex) {
 row.innerHTML = "<td>" + GlobalUserData.rounds[rIndex].date + "</td><td>" +
-GlobalUserData.rounds[rIndex].course + "</td><td>" + 
+GlobalUserData.rounds[rIndex].course + "</td><td>" +
 GlobalUserData.rounds[rIndex].SGS + " (" + GlobalUserData.rounds[rIndex].strokes +
-" in " + GlobalUserData.rounds[rIndex].minutes + ":" + 
-GlobalUserData.rounds[rIndex].seconds + 
+" in " + GlobalUserData.rounds[rIndex].minutes + ":" +
+GlobalUserData.rounds[rIndex].seconds +
 ")</td>" +
-"<td><button aria-label='View and Edit Round'" + 
+"<td><button aria-label='View and Edit Round'" +
 "onclick='editRound(" + GlobalUserData.rounds[rIndex].roundNum + ")'><span class='fas fa-eye'>" +
 "</span>&nbsp;<span class='fas fa-edit'></span></button></td>" +
-"<td><button aria-label='Delete Round'" + 
+"<td><button aria-label='Delete Round'" +
 "onclick='confirmDelete(" + GlobalUserData.rounds[rIndex].roundNum + ")'>" +
 "<span class='fas fa-trash'></span></button></td>";
 }
 
 /*************************************************************************
-* @function addRoundToTable 
-* @desc 
+* @function addRoundToTable
+* @desc
 * Adds a new round to the "Rounds" table, updating the caption
 * @param roundIndex: index in userData.rounds of round to add
 * @global GlobalUserData: the current user's data object
@@ -205,8 +205,8 @@ writeRoundToTable(thisRound,roundIndex);
 }
 
 /*************************************************************************
-* @function updateRoundInTable 
-* @desc 
+* @function updateRoundInTable
+* @desc
 * Updates an existing round in the "Rounds" table with edits made by user.
 * After locating the row, calls writeRoundToTable to write data.
 * @param rowIndex: index in userData.rounds of round to update
@@ -216,12 +216,24 @@ function updateRoundInTable(rowIndex) {
 const thisRound = document.getElementById("r-" + GlobalUserData.rounds[rowIndex].roundNum);
 writeRoundToTable(thisRound,rowIndex);
 }
+/*************************************************************************
+ * @function deleteRound
+ * @desc
+ * Deletes a round from the "Rounds" table and from local storage
+ * @param roundId -- the unique id of the round to be deleted
+ * @returns -- true if round could be deleted, false otherwise
+ *************************************************************************/
+function deleteRound(roundId) {
+    GlobalUserData.rounds = GlobalUserData.rounds.filter(function (round) {
+        return round.roundNum !== roundId;
+    });
+}
 
 /*************************************************************************
-* @function populateRoundsTable 
-* @desc 
+* @function populateRoundsTable
+* @desc
 * Iterate through the userData.rounds array, adding a row corresponding
-* to each round stored in the array. 
+* to each round stored in the array.
 * @global GlobaluserData: object containing the current user's data
 * @global GlobalRoundsDataCaption: The caption for the "Rounds" table
 *************************************************************************/
@@ -237,16 +249,16 @@ if (GlobalUserData.rounds.length == 1) {
 }
 
 /*************************************************************************
-* @function editRound 
-* @desc 
+* @function editRound
+* @desc
 * Set to click handler of "View/Edit" button associated with each row of
 * "Rounds" table. Sets up the round mode form to enable users to view and
 * edit the data on the round on which they clicked, then transitions to
 * the round mode form modal dialog. The index of the round being edited
 * is saved to the global variable roundIndex so that data on this round
-* can be saved when the form is submitted. 
+* can be saved when the form is submitted.
 * @param roundId the unique id of the round that was clicked by the user
-* @global globalRoundIndex: the index (in GlobalUserData.rounds of the 
+* @global globalRoundIndex: the index (in GlobalUserData.rounds of the
 *         round to edit. Initialized in this function.
 * @global GlobalUserData: object containing the current user's data
 *************************************************************************/
@@ -265,11 +277,11 @@ transitionToDialog(GlobalRoundsModeDialog,"SpeedScore: Edit Round",prepEditRound
 }
 
 /*************************************************************************
-* @function logRound 
-* @desc 
+* @function logRound
+* @desc
 * Build a JavaScript object containing a new round data, save the
-* round to localStorage, update the "Rounds"table, return the user to 
-* "Rounds" mode page, and display a toast message indicating that a 
+* round to localStorage, update the "Rounds"table, return the user to
+* "Rounds" mode page, and display a toast message indicating that a
 * new round was logged.
 * @global GlobalLoginPage: The "Log In" page
 * @global GlobalRoundDate: The date field in "Log Round" form
@@ -315,11 +327,11 @@ transitionFromDialog(GlobalRoundsModeDialog);
 }
 
 /*************************************************************************
-* @function updateRound 
-* @desc 
+* @function updateRound
+* @desc
 * Update JavaScript object associated with an existing round, save the
-* round to localStorage, update the "Rounds"table, return the user to 
-* "Rounds" mode page, and display a toast message indicating that a 
+* round to localStorage, update the "Rounds"table, return the user to
+* "Rounds" mode page, and display a toast message indicating that a
 * new round was logged.
 * @global GlobalRoundIndex: The index of the round to be edited;
 *         previously initialized in editRound()
@@ -361,13 +373,13 @@ transitionFromDialog(GlobalRoundsModeDialog);
 }
 
 /*************************************************************************
-* @function logRoundForm SUBMIT Handler 
-* @Desc 
+* @function logRoundForm SUBMIT Handler
+* @Desc
 * When the user clicks on the "Add Round" button, we first check the
 * validity of the fields, presenting accessible
 * error notifications if errors exist. If no errors exist, we
 * call the logRound() function, passing in the round data
-* @global createAccountForm: the <form> element whose 
+* @global createAccountForm: the <form> element whose
 *         SUBMIT handler is triggered
 * @global GlobalRoundDate: the field containing the round date
 * @global GlobalRoundCourse: the course of the round
@@ -381,27 +393,27 @@ e.preventDefault(); //Prevent default submit behavior
 //Is the date valid?
 let dateValid = !GlobalRoundDate.validity.valueMissing;
 //Is the course field valid?
-let courseValid = !GlobalRoundCourse.validity.tooLong && 
+let courseValid = !GlobalRoundCourse.validity.tooLong &&
                   !GlobalRoundCourse.validity.valueMissing;
 //Is the password field valid?
 let strokesValid = !GlobalRoundStrokes.validity.typeMismatch &&
                    !GlobalRoundStrokes.validity.rangeUnderflow &&
-                   !GlobalRoundStrokes.validity.rangeOverflow && 
+                   !GlobalRoundStrokes.validity.rangeOverflow &&
                    !GlobalRoundStrokes.validity.valueMissing;
 //Is the minutes field valid?
 let minutesValid = !GlobalRoundMinutes.validity.typeMismatch &&
                    !GlobalRoundMinutes.validity.rangeUnderflow &&
-                   !GlobalRoundMinutes.validity.rangeOverflow && 
+                   !GlobalRoundMinutes.validity.rangeOverflow &&
                    !GlobalRoundMinutes.validity.valueMissing;
 //Is the seconds field valid?
 let secondsValid = !GlobalRoundSeconds.validity.typeMismatch &&
                    !GlobalRoundSeconds.validity.rangeUnderflow &&
-                   !GlobalRoundSeconds.validity.rangeOverflow && 
+                   !GlobalRoundSeconds.validity.rangeOverflow &&
                    !GlobalRoundSeconds.validity.valueMissing;
 //Is the notes field valid?
 let notesValid = !GlobalRoundNotes.validity.tooLong;
 if (courseValid && strokesValid && minutesValid &&
-    secondsValid && notesValid &&dateValid) { 
+    secondsValid && notesValid &&dateValid) {
     //All is well -- log round or update round
     if (GlobalRoundFormSubmitBtnIcon.classList.contains("fa-save")) {
       logRound();
@@ -414,42 +426,42 @@ if (courseValid && strokesValid && minutesValid &&
 //and allow user to fix them.
 GlobalRoundErrBox.classList.remove("hidden");
 document.title = "Error: Log Round";
-if (!notesValid) { 
+if (!notesValid) {
   GlobalRound.classList.remove("hidden");
   GlobalRoundNotesErr.focus();
   GlobalFirstFocusableLogRoundItem.set(GlobalRoundNotesErr);
 } else {
   GlobalRoundNotesErr.classList.add("hidden");
 }
-if (!secondsValid) { 
+if (!secondsValid) {
   GlobalRoundSecondsErr.classList.remove("hidden");
   GlobalRoundSecondsErr.focus();
   GlobalFirstFocusableLogRoundItem.set(GlobalRoundSecondsErr);
 } else {
   GlobalRoundSecondsErr.classList.add("hidden");
 }
-if (!minutesValid) { 
+if (!minutesValid) {
   GlobalRoundMinutesErr.classList.remove("hidden");
   GlobalRoundMinutesErr.focus();
   GlobalFrstFocusableLogRoundItem.set(GlobalRoundMinutesErr);
 } else {
   GlobalRoundMinutesErr.classList.add("hidden");
 }
-if (!strokesValid) { 
+if (!strokesValid) {
   GlobalRoundStrokesErr.classList.remove("hidden");
   GlobalRoundStrokesErr.focus();
   GlobalFirstFocusableLogRoundItem.set(GlobalRoundStrokesErr);
 } else {
   GlobalRoundStrokesErr.classList.add("hidden");
 }
-if (!courseValid) { 
+if (!courseValid) {
     GlobalRoundCourseErr.classList.remove("hidden");
     GlobalRoundCourseErr.focus();
     GlobalFirstFocusableLogRoundItem.set(GlobalRoundCourseErr);
 } else {
     GlobalRoundCourseErr.classList.add("hidden");
 }
-if (!dateValid) { 
+if (!dateValid) {
   GlobalRoundDateErr.classList.remove("hidden");
   GlobalRoundDateErr.focus();
   GlobalFirstFocusableLogRoundItem.set(GlobalRoundDateErr);
@@ -459,15 +471,15 @@ if (!dateValid) {
 });
 
 /*************************************************************************
-* @function keyDownRoundDialogFocused 
-* @desc 
-* When the user presses a key with an element in the Log Round 
+* @function keyDownRoundDialogFocused
+* @desc
+* When the user presses a key with an element in the Log Round
 * dialog focused, we implement the accessible keyboard interface for
 * a modal dialog box. This means that "Escape" dismisses the dialog and
 * that it is impossible to tab outside of the dialog box.
 * @global GlobalFirstFocusableLogRoundItem: References the first focusable
-*         item in "Log Round" dialog. 
-* @global GlobalRoundsModeLogCancelBtn: The "Cancel" button (last focusable 
+*         item in "Log Round" dialog.
+* @global GlobalRoundsModeLogCancelBtn: The "Cancel" button (last focusable
 *         item in "Log Round" dialog)
 *************************************************************************/
 function keyDownRoundDialogFocused(e) {
